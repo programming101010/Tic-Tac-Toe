@@ -1,13 +1,14 @@
 #--------------------------------TIC TAC TOE Game with Computer----------------------------
 import random
-user_moves=[5]
-computer_moves=[]#here we remove x and o
-rn=[5]#list of random number
+lum=[]#list of user moves
+lcm=[5]#list of computer moves
+
+free_fields=[]#here we remove x and o
 Won=['no winner']#for winner board
 
 Computer='Computer Won The Match'
 User='User Won The Match'
-
+Draw_match="Draw Match"
 
 board=[[1,2,3],[4,'X',6],[7,8,9]]
 
@@ -44,8 +45,9 @@ def Board(board):
 
 
 def user(board):
+  if Won[-1]!=Computer and Won[-1]!=User and Won[-1]!=Draw_match:
     un=int(input('user move: '))
-    if un in user_moves or un in rn:# preventing user to not select  the number in X and O place
+    if un in lum or un in lcm:# preventing user to not select  the number in X and O place
               print('WARNING:--please choose correct number')
               user(board)
     elif un==1:
@@ -185,7 +187,8 @@ def user(board):
 +-------+-------+-------+''')
     else:
        print("please choose correct number")
-    user_moves.append(un)#appending every user move to a list to prevent user to not repeat previous again
+       user(board)
+    lum.append(un)#appending every user move to a list to prevent user to not repeat previous again
 
 
 #_______________________________________________________________________________________________________________
@@ -195,20 +198,19 @@ def user(board):
 def list_of_free_fields(board):# this fun removes X's and O's from list and gives crt free moves
     for i in range(len(board[0])):
         if board[0][i] in [1,2,3,4,6,7,8,9]:
-            computer_moves.append(board[0][i])
+            free_fields.append(board[0][i])
         else:
             continue
     for i in range(len(board[1])):
         if board[1][i] in [1,2,3,4,6,7,8,9]:
-            computer_moves.append(board[1][i])
+            free_fields.append(board[1][i])
         else:
             continue
     for i in range(len(board[2])):
         if board[2][i] in [1,2,3,4,6,7,8,9]:
-            computer_moves.append(board[2][i])
+            free_fields.append(board[2][i])
         else:
             continue
-    print(computer_moves)
 
 
 #_______________________________________________________________________________________________________________
@@ -216,11 +218,12 @@ def list_of_free_fields(board):# this fun removes X's and O's from list and give
 
 
 def computer(board):
-       print("\nFREE MOVES for computer :- ",computer_moves)
-       B_1=computer_moves.copy()# making another copy bcz to remove computers move from list to show user what are free moves
-       cn=random.choice(computer_moves)
-       rn.append(cn)
-       computer_moves.clear() # clearing the list to avoid previous values to select by computer again
+    if Won[-1]!=Computer and Won[-1]!=User and Won[-1]!=Draw_match:#checking if there is any winner or not if there is winner fucntions wont be called
+       print("\nFREE MOVES for computer :- ",free_fields)
+       ff=free_fields.copy()# making another copy bcz to remove computers move from list to show user what are free moves
+       cn=random.choice(free_fields)
+       lcm.append(cn)
+       free_fields.clear() # clearing the list to avoid previous values to select by computer again
        print("\ncomputer move is",cn)
        if cn==1:
               board[0][0]='X'
@@ -342,10 +345,11 @@ def computer(board):
 |   '''+str(board[2][0])+'''   |   '''+str(board[2][1])+'''   |   '''+str(board[2][2])+'''   |
 |       |       |       |
 +-------+-------+-------+''')
-       B_1.remove(cn)#to remove computers move from list to show user what are free moves
-       if B_1==[]:
+       ff.remove(cn)#to remove computers move from list to show user what are free moves
+       if ff==[]:
               print("NO MORE MOVES---DRAW MATCH")
-       print('\n\nUser FREE MOVES :- ',B_1,)
+              Won.append("Draw Match")
+       print('\n\nUser FREE MOVES :- ',ff)
 
 
 #________________________________________________________________________________________________________________________________________
@@ -353,7 +357,7 @@ def computer(board):
 
 
 def winner(board):
-       if Won[-1]!=Computer and Won[-1]!=User:
+       if Won[-1]!=Computer and Won[-1]!=User:#checking if there is any winner or not if there is winner fucntions wont be called
        #computer horizontal checking
               if board[0][0]=='X' and board[0][1]=='X' and board[0][2]=='X':
                      print('Computer won the match')
@@ -411,8 +415,8 @@ def winner(board):
 
 Board(board)
 for i in range(20):
-       if Won[-1]!=Computer and Won[-1]!=User:# checking if there is any winner or not if there is winner fucntions wont be called
               user(board)
+              winner(board)
               list_of_free_fields(board)
               computer(board)
               winner(board)
